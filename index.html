@@ -2,34 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Smart Travel — Plan Less. Travel More.</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <meta
     name="description"
-    content="Smart Travel helps you create personalized trips based on your destination, budget, duration and interests."
+    content="Smart Travel — Plan smarter trips with live weather, intelligent itineraries, budgets and destination discovery."
   />
 
+  <title>Smart Travel — Plan Less. Travel More.</title>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
     rel="stylesheet"
   />
 
+  <!-- Leaflet Map -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Main CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <!-- ================= NAVBAR ================= -->
+  <!-- =========================================
+       NAVBAR
+  ========================================== -->
 
   <header class="navbar">
     <div class="nav-container">
 
-      <a href="#" class="logo">
-        <span class="logo-icon">✦</span>
+      <a href="#home" class="logo">
         Smart<span>Travel</span>
       </a>
 
@@ -39,101 +53,151 @@
         <a href="#how-it-works">How it works</a>
       </nav>
 
-      <button class="nav-plan-btn" onclick="scrollToPlanner()">
+      <a href="#planner" class="nav-button">
         Plan a Trip
-      </button>
+      </a>
 
     </div>
   </header>
 
 
-  <!-- ================= HERO ================= -->
+  <!-- =========================================
+       HERO
+  ========================================== -->
 
   <main>
 
-    <section class="hero">
+    <section class="hero" id="home">
 
       <div class="hero-content">
 
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          Your intelligent travel companion
+        <div class="eyebrow">
+          ✦ AI-INSPIRED TRAVEL PLANNER
         </div>
 
         <h1>
           Travel smarter.
-          <br />
           <span>Experience more.</span>
         </h1>
 
         <p>
-          Build personalized trips around your destination, budget,
-          time and interests — all in one place.
+          Build a personalized trip with intelligent itineraries,
+          live destination weather, smart budgeting and real-world
+          destination discovery.
         </p>
 
-        <div class="hero-buttons">
-          <button class="primary-btn" onclick="scrollToPlanner()">
+        <div class="hero-actions">
+
+          <a href="#planner" class="primary-button">
             Start Planning
             <span>→</span>
-          </button>
-
-          <a href="#how-it-works" class="secondary-btn">
-            See how it works
           </a>
+
+          <a href="#features" class="secondary-button">
+            Explore Features
+          </a>
+
         </div>
 
-        <div class="hero-stats">
+        <div class="hero-trust">
 
-          <div class="hero-stat">
+          <div class="trust-item">
             <strong>01</strong>
-            <span>Choose your destination</span>
+            <span>Smart planning</span>
           </div>
 
-          <div class="hero-stat">
+          <div class="trust-item">
             <strong>02</strong>
-            <span>Set your preferences</span>
+            <span>Live data</span>
           </div>
 
-          <div class="hero-stat">
+          <div class="trust-item">
             <strong>03</strong>
-            <span>Get your perfect itinerary</span>
+            <span>Personalized trips</span>
           </div>
 
         </div>
 
       </div>
 
+
+      <!-- HERO VISUAL -->
+
       <div class="hero-visual">
 
-        <div class="floating-card card-top">
-          <span>✈️</span>
-          <div>
-            <small>Next adventure</small>
-            <strong>Ready when you are</strong>
+        <div class="hero-orbit orbit-one"></div>
+        <div class="hero-orbit orbit-two"></div>
+
+        <div class="hero-card main-travel-card">
+
+          <div class="mini-label">
+            YOUR NEXT ADVENTURE
           </div>
+
+          <h3>
+            Discover somewhere
+            <em>beautiful.</em>
+          </h3>
+
+          <div class="destination-preview">
+
+            <div class="preview-image">
+              🌴
+            </div>
+
+            <div>
+              <strong>Goa, India</strong>
+              <span>5 days · Beach escape</span>
+            </div>
+
+          </div>
+
+          <div class="preview-stats">
+
+            <div>
+              <span>🌤️</span>
+              <strong>29°C</strong>
+              <small>Weather</small>
+            </div>
+
+            <div>
+              <span>💰</span>
+              <strong>₹20K</strong>
+              <small>Budget</small>
+            </div>
+
+            <div>
+              <span>🗓️</span>
+              <strong>5</strong>
+              <small>Days</small>
+            </div>
+
+          </div>
+
         </div>
 
-        <div class="travel-orb">
 
-          <div class="orb-inner">
-            <span class="plane">✈</span>
+        <div class="floating-card weather-floating">
+
+          <span class="floating-icon">☀️</span>
+
+          <div>
+            <strong>Perfect weather</strong>
+            <small>Great for exploring</small>
           </div>
-
-          <div class="location-pin pin-one">📍</div>
-          <div class="location-pin pin-two">📍</div>
-          <div class="location-pin pin-three">📍</div>
 
         </div>
 
-        <div class="floating-card card-bottom">
-          <div class="mini-progress">
-            <span></span>
-          </div>
+
+        <div class="floating-card plan-floating">
+
+          <span class="floating-icon">✦</span>
 
           <div>
-            <small>Trip planning</small>
-            <strong>Made simple</strong>
+            <strong>Smart itinerary</strong>
+            <small>Personalized for you</small>
           </div>
+
         </div>
 
       </div>
@@ -141,24 +205,25 @@
     </section>
 
 
-    <!-- ================= PLANNER ================= -->
+    <!-- =========================================
+         PLANNER
+    ========================================== -->
 
     <section class="planner-section" id="planner">
 
       <div class="section-heading">
 
-        <div>
-          <span class="eyebrow">SMART PLANNER</span>
-
-          <h2>
-            Where are you
-            <span>going?</span>
-          </h2>
+        <div class="eyebrow">
+          PLAN YOUR JOURNEY
         </div>
 
+        <h2>
+          Tell us what
+          <span>you want.</span>
+        </h2>
+
         <p>
-          Tell us a little about your trip and we'll help
-          shape the perfect adventure.
+          We'll turn your preferences into a personalized travel plan.
         </p>
 
       </div>
@@ -166,35 +231,11 @@
 
       <div class="planner-card">
 
-        <div class="planner-progress">
-
-          <div class="progress-step active">
-            <span>1</span>
-            <small>Destination</small>
-          </div>
-
-          <div class="progress-line"></div>
-
-          <div class="progress-step">
-            <span>2</span>
-            <small>Preferences</small>
-          </div>
-
-          <div class="progress-line"></div>
-
-          <div class="progress-step">
-            <span>3</span>
-            <small>Your plan</small>
-          </div>
-
-        </div>
-
-
         <form id="travelForm">
 
           <!-- Destination -->
 
-          <div class="form-group destination-group">
+          <div class="form-group full-width">
 
             <label for="destination">
               Where do you want to go?
@@ -207,8 +248,97 @@
               <input
                 type="text"
                 id="destination"
-                placeholder="e.g. Goa, Manali, Paris..."
+                name="destination"
+                placeholder="e.g. Goa, Manali, Jaipur..."
                 autocomplete="off"
+                required
+              />
+
+            </div>
+
+            <div
+              class="autocomplete-results"
+              id="autocompleteResults"
+            ></div>
+
+          </div>
+
+
+          <!-- Dates / Duration -->
+
+          <div class="form-grid">
+
+            <div class="form-group">
+
+              <label for="startDate">
+                Start date
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">📅</span>
+
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                />
+
+              </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="days">
+                Trip duration
+              </label>
+
+              <div class="input-wrapper">
+
+                <span class="input-icon">🗓️</span>
+
+                <input
+                  type="number"
+                  id="days"
+                  name="days"
+                  min="1"
+                  max="30"
+                  value="5"
+                  placeholder="5"
+                  required
+                />
+
+                <span class="input-suffix">
+                  days
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Budget -->
+
+          <div class="form-group">
+
+            <label for="budget">
+              Your budget
+            </label>
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">₹</span>
+
+              <input
+                type="number"
+                id="budget"
+                name="budget"
+                min="1000"
+                placeholder="20000"
                 required
               />
 
@@ -217,66 +347,9 @@
           </div>
 
 
-          <!-- Dates -->
-
-          <div class="form-row">
-
-            <div class="form-group">
-
-              <label for="days">
-                How many days?
-              </label>
-
-              <div class="input-wrapper">
-
-                <span class="input-icon">📅</span>
-
-                <input
-                  type="number"
-                  id="days"
-                  min="1"
-                  max="60"
-                  placeholder="5"
-                  required
-                />
-
-                <span class="input-suffix">days</span>
-
-              </div>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="budget">
-                Your budget
-              </label>
-
-              <div class="input-wrapper">
-
-                <span class="input-icon">₹</span>
-
-                <input
-                  type="number"
-                  id="budget"
-                  min="500"
-                  placeholder="20,000"
-                  required
-                />
-
-                <span class="input-suffix">INR</span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
           <!-- Travellers -->
 
-          <div class="form-group">
+          <div class="form-group full-width">
 
             <label>
               Who are you travelling with?
@@ -294,7 +367,11 @@
                 />
 
                 <span class="choice-icon">🧍</span>
-                <span class="choice-title">Solo</span>
+
+                <span class="choice-content">
+                  <strong>Solo</strong>
+                  <small>Just me</small>
+                </span>
 
               </label>
 
@@ -308,7 +385,11 @@
                 />
 
                 <span class="choice-icon">💑</span>
-                <span class="choice-title">Couple</span>
+
+                <span class="choice-content">
+                  <strong>Couple</strong>
+                  <small>Two people</small>
+                </span>
 
               </label>
 
@@ -322,7 +403,11 @@
                 />
 
                 <span class="choice-icon">👯</span>
-                <span class="choice-title">Friends</span>
+
+                <span class="choice-content">
+                  <strong>Friends</strong>
+                  <small>Group trip</small>
+                </span>
 
               </label>
 
@@ -336,7 +421,11 @@
                 />
 
                 <span class="choice-icon">👨‍👩‍👧</span>
-                <span class="choice-title">Family</span>
+
+                <span class="choice-content">
+                  <strong>Family</strong>
+                  <small>Family trip</small>
+                </span>
 
               </label>
 
@@ -347,44 +436,78 @@
 
           <!-- Interests -->
 
-          <div class="form-group">
+          <div class="form-group full-width">
 
             <label>
-              What do you love?
-              <span class="optional">Choose up to 4</span>
+              What are you into?
+              <span class="optional-label">
+                Choose up to 5
+              </span>
             </label>
 
             <div class="interest-grid">
 
-              <button type="button" class="interest selected" data-interest="beaches">
+              <button
+                type="button"
+                class="interest"
+                data-interest="beaches"
+              >
                 🏖️ Beaches
               </button>
 
-              <button type="button" class="interest" data-interest="adventure">
+              <button
+                type="button"
+                class="interest"
+                data-interest="adventure"
+              >
                 🧗 Adventure
               </button>
 
-              <button type="button" class="interest" data-interest="food">
+              <button
+                type="button"
+                class="interest"
+                data-interest="food"
+              >
                 🍜 Food
               </button>
 
-              <button type="button" class="interest" data-interest="culture">
+              <button
+                type="button"
+                class="interest"
+                data-interest="culture"
+              >
                 🏛️ Culture
               </button>
 
-              <button type="button" class="interest" data-interest="nature">
-                🌿 Nature
+              <button
+                type="button"
+                class="interest"
+                data-interest="nature"
+              >
+                🌲 Nature
               </button>
 
-              <button type="button" class="interest" data-interest="nightlife">
+              <button
+                type="button"
+                class="interest"
+                data-interest="nightlife"
+              >
                 🌃 Nightlife
               </button>
 
-              <button type="button" class="interest" data-interest="shopping">
+              <button
+                type="button"
+                class="interest"
+                data-interest="shopping"
+              >
                 🛍️ Shopping
               </button>
 
-              <button type="button" class="interest" data-interest="relaxation">
+              <button
+                type="button"
+                class="interest"
+                data-interest="relaxation"
+              >
                 🧘 Relaxation
               </button>
 
@@ -393,17 +516,100 @@
           </div>
 
 
-          <!-- Submit -->
+          <!-- Pace -->
 
-          <button type="submit" class="generate-btn">
+          <div class="form-group full-width">
 
-            <span class="generate-icon">✦</span>
+            <label>
+              What kind of trip do you want?
+            </label>
 
-            <span>Generate My Trip</span>
+            <div class="pace-grid">
 
-            <span class="generate-arrow">→</span>
+              <label class="pace-card selected">
+
+                <input
+                  type="radio"
+                  name="pace"
+                  value="balanced"
+                  checked
+                />
+
+                <span>⚖️</span>
+
+                <div>
+                  <strong>Balanced</strong>
+                  <small>A little bit of everything</small>
+                </div>
+
+              </label>
+
+
+              <label class="pace-card">
+
+                <input
+                  type="radio"
+                  name="pace"
+                  value="relaxed"
+                />
+
+                <span>🌿</span>
+
+                <div>
+                  <strong>Relaxed</strong>
+                  <small>Slow & comfortable</small>
+                </div>
+
+              </label>
+
+
+              <label class="pace-card">
+
+                <input
+                  type="radio"
+                  name="pace"
+                  value="packed"
+                />
+
+                <span>⚡</span>
+
+                <div>
+                  <strong>Packed</strong>
+                  <small>See as much as possible</small>
+                </div>
+
+              </label>
+
+            </div>
+
+          </div>
+
+
+          <!-- Generate -->
+
+          <button
+            type="submit"
+            class="generate-btn"
+          >
+
+            <span class="generate-icon">
+              ✦
+            </span>
+
+            <span>
+              Build My Smart Trip
+            </span>
+
+            <span class="generate-arrow">
+              →
+            </span>
 
           </button>
+
+          <p class="form-note">
+            ✦ Your trip is generated using your destination,
+            preferences, weather and available destination data.
+          </p>
 
         </form>
 
@@ -412,13 +618,31 @@
     </section>
 
 
-    <!-- ================= HOW IT WORKS ================= -->
+    <!-- =========================================
+         RESULTS CONTAINER
+    ========================================== -->
 
-    <section class="how-section" id="how-it-works">
+    <section
+      id="resultsSection"
+      class="results-section"
+      aria-live="polite"
+    ></section>
+
+
+    <!-- =========================================
+         HOW IT WORKS
+    ========================================== -->
+
+    <section
+      class="how-section"
+      id="how-it-works"
+    >
 
       <div class="section-heading centered">
 
-        <span class="eyebrow">HOW IT WORKS</span>
+        <div class="eyebrow">
+          HOW IT WORKS
+        </div>
 
         <h2>
           From idea to
@@ -426,8 +650,7 @@
         </h2>
 
         <p>
-          No endless tabs. No complicated spreadsheets.
-          Just tell us what you want.
+          Three simple steps between you and your next adventure.
         </p>
 
       </div>
@@ -437,31 +660,21 @@
 
         <article class="step-card">
 
-          <div class="step-number">01</div>
+          <div class="step-number">
+            01
+          </div>
 
-          <div class="step-icon">🌍</div>
+          <div class="step-icon">
+            🧭
+          </div>
 
-          <h3>Tell us your trip</h3>
-
-          <p>
-            Enter your destination, budget, duration
-            and travel style.
-          </p>
-
-        </article>
-
-
-        <article class="step-card featured-step">
-
-          <div class="step-number">02</div>
-
-          <div class="step-icon">✨</div>
-
-          <h3>Smart planning</h3>
+          <h3>
+            Tell us your plan
+          </h3>
 
           <p>
-            Smart Travel organizes your preferences
-            into a balanced travel plan.
+            Enter your destination, budget, travel group,
+            interests and preferred travel pace.
           </p>
 
         </article>
@@ -469,15 +682,43 @@
 
         <article class="step-card">
 
-          <div class="step-number">03</div>
+          <div class="step-number">
+            02
+          </div>
 
-          <div class="step-icon">🧳</div>
+          <div class="step-icon">
+            ✦
+          </div>
 
-          <h3>Start exploring</h3>
+          <h3>
+            Smart Travel thinks
+          </h3>
 
           <p>
-            Get a clear day-by-day itinerary and
-            enjoy your adventure.
+            Your preferences are combined with destination,
+            weather and location data.
+          </p>
+
+        </article>
+
+
+        <article class="step-card">
+
+          <div class="step-number">
+            03
+          </div>
+
+          <div class="step-icon">
+            🧳
+          </div>
+
+          <h3>
+            Start exploring
+          </h3>
+
+          <p>
+            Get your itinerary, budget, recommendations,
+            map and travel tips in one place.
           </p>
 
         </article>
@@ -487,60 +728,68 @@
     </section>
 
 
-    <!-- ================= FEATURES ================= -->
+    <!-- =========================================
+         FEATURES
+    ========================================== -->
 
-    <section class="features-section" id="features">
+    <section
+      class="features-section"
+      id="features"
+    >
 
       <div class="section-heading">
 
-        <div>
-
-          <span class="eyebrow">BUILT FOR TRAVELLERS</span>
-
-          <h2>
-            Everything you need.
-            <span>Nothing you don't.</span>
-          </h2>
-
+        <div class="eyebrow">
+          BUILT FOR BETTER TRAVEL
         </div>
+
+        <h2>
+          More than just
+          <span>an itinerary.</span>
+        </h2>
 
       </div>
 
 
       <div class="features-grid">
 
-        <article class="feature-card large-feature">
+        <article class="feature-card large">
 
-          <div class="feature-icon">🗺️</div>
+          <div class="feature-icon">
+            🌦️
+          </div>
 
           <div>
 
-            <h3>Day-by-day itineraries</h3>
+            <h3>
+              Live Weather
+            </h3>
 
             <p>
-              Turn a blank trip into a structured
-              adventure with activities organized
-              for every day.
+              See destination weather and forecasts while
+              planning your trip.
             </p>
 
           </div>
 
-          <div class="fake-itinerary">
+        </article>
 
-            <div class="fake-day">
-              <strong>DAY 01</strong>
-              <span>Explore & discover</span>
-            </div>
 
-            <div class="fake-day">
-              <strong>DAY 02</strong>
-              <span>Adventure awaits</span>
-            </div>
+        <article class="feature-card">
 
-            <div class="fake-day">
-              <strong>DAY 03</strong>
-              <span>Slow & unwind</span>
-            </div>
+          <div class="feature-icon">
+            🗺️
+          </div>
+
+          <div>
+
+            <h3>
+              Interactive Map
+            </h3>
+
+            <p>
+              Visualize your destination and discovered places.
+            </p>
 
           </div>
 
@@ -549,20 +798,20 @@
 
         <article class="feature-card">
 
-          <div class="feature-icon">💰</div>
+          <div class="feature-icon">
+            💰
+          </div>
 
-          <h3>Budget aware</h3>
+          <div>
 
-          <p>
-            Keep your adventure within the budget
-            you actually have.
-          </p>
+            <h3>
+              Smart Budget
+            </h3>
 
-          <div class="budget-visual">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <p>
+              Break your travel budget into useful categories.
+            </p>
+
           </div>
 
         </article>
@@ -570,19 +819,21 @@
 
         <article class="feature-card">
 
-          <div class="feature-icon">❤️</div>
+          <div class="feature-icon">
+            📍
+          </div>
 
-          <h3>Your interests</h3>
+          <div>
 
-          <p>
-            Beaches, food, culture, adventure or
-            relaxation — make the trip yours.
-          </p>
+            <h3>
+              Place Discovery
+            </h3>
 
-          <div class="interest-pills">
-            <span>Food</span>
-            <span>Nature</span>
-            <span>Culture</span>
+            <p>
+              Discover attractions, food spots and useful
+              locations around your destination.
+            </p>
+
           </div>
 
         </article>
@@ -590,40 +841,44 @@
 
         <article class="feature-card">
 
-          <div class="feature-icon">📊</div>
+          <div class="feature-icon">
+            🎒
+          </div>
 
-          <h3>Trip overview</h3>
+          <div>
 
-          <p>
-            See your destination, duration, budget
-            and itinerary at a glance.
-          </p>
+            <h3>
+              Smart Packing
+            </h3>
 
-          <div class="overview-mini">
-            <div>
-              <small>Days</small>
-              <strong>05</strong>
-            </div>
+            <p>
+              Get packing suggestions based on weather
+              and your travel style.
+            </p>
 
-            <div>
-              <small>Budget</small>
-              <strong>₹20K</strong>
-            </div>
           </div>
 
         </article>
 
 
-        <article class="feature-card">
+        <article class="feature-card large accent-card">
 
-          <div class="feature-icon">📱</div>
+          <div class="feature-icon">
+            ✈️
+          </div>
 
-          <h3>Travel anywhere</h3>
+          <div>
 
-          <p>
-            A responsive experience designed for
-            planning from your phone or laptop.
-          </p>
+            <h3>
+              One dashboard for your entire trip.
+            </h3>
+
+            <p>
+              From planning to exploring, keep the important
+              parts of your journey together.
+            </p>
+
+          </div>
 
         </article>
 
@@ -632,45 +887,58 @@
     </section>
 
 
-    <!-- ================= CTA ================= -->
+    <!-- =========================================
+         CTA
+    ========================================== -->
 
     <section class="final-cta">
 
-      <div class="cta-decoration decoration-one"></div>
-      <div class="cta-decoration decoration-two"></div>
+      <div class="cta-content">
 
-      <span class="eyebrow">YOUR NEXT ADVENTURE</span>
+        <div class="eyebrow">
+          YOUR NEXT ADVENTURE
+        </div>
 
-      <h2>
-        Somewhere out there,
-        <br />
-        <span>your trip is waiting.</span>
-      </h2>
+        <h2>
+          Where will you
+          <span>go next?</span>
+        </h2>
 
-      <p>
-        Stop overthinking. Start exploring.
-      </p>
+        <p>
+          Stop overthinking your trip.
+          Start building it.
+        </p>
 
-      <button class="primary-btn light-btn" onclick="scrollToPlanner()">
-        Plan My Trip
-        <span>→</span>
-      </button>
+        <a
+          href="#planner"
+          class="primary-button cta-button"
+        >
+          Plan My Trip
+          <span>→</span>
+        </a>
+
+      </div>
+
+      <div class="cta-decoration">
+        ✈
+      </div>
 
     </section>
 
   </main>
 
 
-  <!-- ================= FOOTER ================= -->
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
 
-  <footer>
+  <footer class="footer">
 
     <div class="footer-container">
 
       <div class="footer-brand">
 
-        <a href="#" class="logo">
-          <span class="logo-icon">✦</span>
+        <a href="#home" class="logo">
           Smart<span>Travel</span>
         </a>
 
@@ -681,11 +949,32 @@
       </div>
 
 
-      <div class="footer-right">
+      <div class="footer-links">
 
-        <span>Built with curiosity & code.</span>
+        <a href="#planner">
+          Planner
+        </a>
 
-        <span>© 2026 Smart Travel</span>
+        <a href="#features">
+          Features
+        </a>
+
+        <a href="#how-it-works">
+          How it works
+        </a>
+
+      </div>
+
+
+      <div class="footer-credit">
+
+        <span>
+          Built with curiosity ✦
+        </span>
+
+        <small>
+          Smart Travel
+        </small>
 
       </div>
 
@@ -694,7 +983,14 @@
   </footer>
 
 
-  <!-- ================= SCRIPT ================= -->
+  <!-- Leaflet JS -->
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  ></script>
+
+
+  <!-- Main JavaScript -->
 
   <script src="script.js"></script>
 
