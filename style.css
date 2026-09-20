@@ -1729,3 +1729,133 @@ footer {
     font-size: 36px;
   }
 }
+/* =========================================================
+   FINAL FIX — HERO + RESULTS
+   ========================================================= */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+}
+
+.hero-visual {
+  position: relative;
+  z-index: 3;
+  min-height: 520px;
+  isolation: isolate;
+}
+
+.main-travel-card {
+  position: absolute;
+  z-index: 2;
+  width: 390px;
+  max-width: 100%;
+  right: 80px;
+  top: 45px;
+}
+
+.weather-floating {
+  position: absolute;
+  z-index: 6;
+  left: -15px;
+  top: 120px;
+}
+
+.plan-floating {
+  position: absolute;
+  z-index: 6;
+  right: 0;
+  bottom: 35px;
+}
+
+/* Make generated results visible */
+#resultsSection {
+  display: block !important;
+  width: 100%;
+  min-height: 1px;
+  position: relative;
+  z-index: 10;
+}
+
+#resultsSection:empty {
+  display: none !important;
+}
+
+/* Traveller / pace selected state */
+.choice-card,
+.pace-card {
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.choice-card.selected,
+.pace-card.selected {
+  border-color: var(--green) !important;
+  background: var(--green-light) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(23, 63, 53, 0.10);
+}
+
+.choice-card input,
+.pace-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+
+  .hero-visual {
+    min-height: 480px;
+    margin-top: 30px;
+  }
+
+  .main-travel-card {
+    width: min(360px, 88%);
+    right: 6%;
+    top: 45px;
+  }
+
+  .weather-floating {
+    left: 0;
+    top: 90px;
+  }
+
+  .plan-floating {
+    right: 0;
+    bottom: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .hero-visual {
+    min-height: 430px;
+  }
+
+  .main-travel-card {
+    width: 86%;
+    right: 7%;
+    top: 35px;
+  }
+
+  .weather-floating {
+    left: -5px;
+    top: 70px;
+    transform: scale(0.9);
+    transform-origin: left center;
+  }
+
+  .plan-floating {
+    right: -5px;
+    bottom: 15px;
+    transform: scale(0.9);
+    transform-origin: right center;
+  }
+}
