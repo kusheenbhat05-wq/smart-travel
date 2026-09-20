@@ -1,863 +1,583 @@
-/* ==========================================
-   SMART TRAVEL
-   Intelligent Trip Planner
-========================================== */
+// ============================================
+// SMART TRAVEL — LIVE WEATHER + TRIP PLANNER
+// ============================================
 
-const travelForm = document.getElementById("travelForm");
+const form = document.getElementById("travelForm");
+const interestButtons = document.querySelectorAll(".interest");
+const travellerCards = document.querySelectorAll(".choice-card");
 
-const destinationInput = document.getElementById("destination");
-const daysInput = document.getElementById("days");
-const budgetInput = document.getElementById("budget");
+let selectedInterests = [];
 
-const choiceCards = document.querySelectorAll(".choice-card");
-const interests = document.querySelectorAll(".interest");
+// --------------------------------------------
+// TRAVELLER SELECTION
+// --------------------------------------------
 
-
-/* ==========================================
-   TRAVELLER SELECTION
-========================================== */
-
-choiceCards.forEach((card) => {
+travellerCards.forEach((card) => {
   card.addEventListener("click", () => {
-
-    choiceCards.forEach((item) => {
-      item.classList.remove("selected");
-    });
-
+    travellerCards.forEach((item) => item.classList.remove("selected"));
     card.classList.add("selected");
 
-    const radio = card.querySelector("input");
-
-    if (radio) {
-      radio.checked = true;
-    }
+    const radio = card.querySelector("input[type='radio']");
+    if (radio) radio.checked = true;
   });
 });
 
+// --------------------------------------------
+// INTEREST SELECTION
+// --------------------------------------------
 
-/* ==========================================
-   INTEREST SELECTION
-========================================== */
+interestButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const interest = button.dataset.interest;
 
-interests.forEach((interest) => {
-
-  interest.addEventListener("click", () => {
-
-    const selected = document.querySelectorAll(
-      ".interest.selected"
-    );
-
-    if (
-      !interest.classList.contains("selected") &&
-      selected.length >= 4
-    ) {
-      showToast("Choose up to 4 interests.");
+    if (button.classList.contains("selected")) {
+      button.classList.remove("selected");
+      selectedInterests = selectedInterests.filter(
+        (item) => item !== interest
+      );
       return;
     }
 
-    interest.classList.toggle("selected");
+    if (selectedInterests.length >= 4) {
+      showToast("You can select maximum 4 interests.");
+      return;
+    }
 
+    button.classList.add("selected");
+    selectedInterests.push(interest);
   });
-
 });
 
+// --------------------------------------------
+// DESTINATION DATA
+// --------------------------------------------
 
-/* ==========================================
-   TRIP DATA
-========================================== */
-
-const destinations = {
-
+const destinationData = {
   goa: {
+    name: "Goa",
     places: [
       "Baga Beach",
       "Calangute Beach",
       "Fort Aguada",
       "Anjuna",
       "Chapora Fort",
-      "Dona Paula",
-      "Palolem Beach",
-      "Fontainhas"
-    ],
-
-    food: [
-      "Goan fish curry",
-      "Prawn curry",
-      "Bebinca",
-      "Chicken cafreal"
-    ],
-
-    adventure: [
-      "Water sports",
-      "Parasailing",
-      "Jet skiing",
-      "Scuba diving"
-    ],
-
-    nature: [
-      "Dudhsagar Falls",
-      "Palolem Beach",
-      "Butterfly Beach"
-    ],
-
-    culture: [
-      "Fontainhas",
-      "Basilica of Bom Jesus",
-      "Se Cathedral"
-    ],
-
-    relaxation: [
-      "Beach sunset",
-      "Spa session",
-      "Café hopping"
+      "Dudhsagar Falls"
     ]
   },
-
 
   manali: {
+    name: "Manali",
     places: [
       "Solang Valley",
+      "Hadimba Temple",
       "Mall Road",
-      "Hidimba Temple",
       "Old Manali",
-      "Vashisht",
       "Atal Tunnel",
-      "Sissu",
-      "Jogini Falls"
-    ],
-
-    food: [
-      "Siddu",
-      "Thukpa",
-      "Momos",
-      "Trout"
-    ],
-
-    adventure: [
-      "Paragliding",
-      "River rafting",
-      "Skiing",
-      "Snow activities"
-    ],
-
-    nature: [
-      "Solang Valley",
-      "Sissu",
-      "Jogini Falls"
-    ],
-
-    culture: [
-      "Hidimba Temple",
-      "Vashisht Temple",
-      "Old Manali"
-    ],
-
-    relaxation: [
-      "Café hopping",
-      "Hot springs",
-      "Mountain views"
+      "Vashisht"
     ]
   },
 
-
   jaipur: {
+    name: "Jaipur",
     places: [
       "Amber Fort",
       "Hawa Mahal",
       "City Palace",
       "Jantar Mantar",
       "Nahargarh Fort",
-      "Jal Mahal",
-      "Albert Hall Museum",
-      "Bapu Bazaar"
-    ],
-
-    food: [
-      "Dal Baati Churma",
-      "Pyaaz Kachori",
-      "Ghewar",
-      "Laal Maas"
-    ],
-
-    adventure: [
-      "Cycling tour",
-      "Hot air balloon",
-      "Fort exploration"
-    ],
-
-    nature: [
-      "Jal Mahal",
-      "Central Park",
-      "Nahargarh Hills"
-    ],
-
-    culture: [
-      "City Palace",
-      "Amber Fort",
-      "Hawa Mahal",
-      "Jantar Mantar"
-    ],
-
-    relaxation: [
-      "Rooftop cafés",
-      "Heritage hotel",
-      "Sunset at Nahargarh"
+      "Jal Mahal"
     ]
   },
 
-
   delhi: {
+    name: "Delhi",
     places: [
       "India Gate",
       "Red Fort",
       "Qutub Minar",
       "Humayun's Tomb",
       "Lotus Temple",
-      "Chandni Chowk",
-      "Akshardham",
       "Connaught Place"
-    ],
-
-    food: [
-      "Chole Bhature",
-      "Parathas",
-      "Chaat",
-      "Butter Chicken"
-    ],
-
-    adventure: [
-      "Street food walk",
-      "Cycling tour",
-      "Old Delhi walk"
-    ],
-
-    nature: [
-      "Lodhi Garden",
-      "Sunder Nursery",
-      "India Gate lawns"
-    ],
-
-    culture: [
-      "Red Fort",
-      "Qutub Minar",
-      "Humayun's Tomb",
-      "Akshardham"
-    ],
-
-    relaxation: [
-      "Café hopping",
-      "Lodhi Garden",
-      "Rooftop dinner"
     ]
   },
 
-
   mumbai: {
+    name: "Mumbai",
     places: [
       "Gateway of India",
       "Marine Drive",
-      "Elephanta Caves",
       "Colaba",
-      "Bandra",
-      "Juhu Beach",
-      "Sanjay Gandhi National Park",
-      "Crawford Market"
-    ],
-
-    food: [
-      "Vada Pav",
-      "Pav Bhaji",
-      "Misal Pav",
-      "Bombay Sandwich"
-    ],
-
-    adventure: [
-      "Cycling",
-      "Trekking",
-      "Elephanta exploration"
-    ],
-
-    nature: [
-      "Marine Drive",
+      "Elephanta Caves",
       "Juhu Beach",
       "Sanjay Gandhi National Park"
-    ],
-
-    culture: [
-      "Gateway of India",
-      "Elephanta Caves",
-      "Colaba"
-    ],
-
-    relaxation: [
-      "Marine Drive sunset",
-      "Beach walk",
-      "Rooftop dinner"
     ]
   },
 
-
   rishikesh: {
+    name: "Rishikesh",
     places: [
       "Laxman Jhula",
       "Ram Jhula",
       "Triveni Ghat",
       "Beatles Ashram",
       "Neer Garh Waterfall",
-      "Parmarth Niketan",
-      "Ganga Aarti",
-      "Tapovan"
-    ],
-
-    food: [
-      "Aloo Puri",
-      "North Indian thali",
-      "Momos",
-      "Local cafés"
-    ],
-
-    adventure: [
-      "River rafting",
-      "Bungee jumping",
-      "Giant swing",
-      "Trekking"
-    ],
-
-    nature: [
-      "Neer Garh Waterfall",
-      "Ganga",
-      "Rajaji National Park"
-    ],
-
-    culture: [
-      "Triveni Ghat",
-      "Parmarth Niketan",
-      "Beatles Ashram"
-    ],
-
-    relaxation: [
-      "Yoga session",
-      "Ganga sunset",
-      "Café hopping"
+      "River Rafting"
     ]
   }
-
 };
 
+// --------------------------------------------
+// INTEREST → ACTIVITY MAPPING
+// --------------------------------------------
 
-/* ==========================================
-   GENERIC DESTINATION FALLBACK
-========================================== */
+const interestActivities = {
+  beaches: [
+    "Spend time at a scenic beach",
+    "Enjoy a sunset by the water"
+  ],
 
-const genericPlaces = [
-  "City Centre",
-  "Local Market",
-  "Historic Landmark",
-  "Popular Viewpoint",
-  "Local Museum",
-  "Main Shopping Area",
-  "Famous Food Street",
-  "Sunset Spot"
-];
+  adventure: [
+    "Try a local adventure activity",
+    "Explore an outdoor attraction"
+  ],
 
+  food: [
+    "Try popular local food",
+    "Explore a local food street"
+  ],
 
-/* ==========================================
-   DESTINATION MATCHING
-========================================== */
+  culture: [
+    "Visit an important cultural landmark",
+    "Explore local history and architecture"
+  ],
 
-function getDestinationData(destination) {
+  nature: [
+    "Visit a natural attraction",
+    "Take a relaxed nature walk"
+  ],
 
-  const text = destination.toLowerCase().trim();
+  nightlife: [
+    "Explore the city's evening scene",
+    "Visit a popular nightlife area"
+  ],
 
-  const key = Object.keys(destinations).find((city) =>
-    text.includes(city)
-  );
+  shopping: [
+    "Explore a popular local market",
+    "Shop for local products and souvenirs"
+  ],
 
-  if (key) {
-    return destinations[key];
+  relaxation: [
+    "Keep the evening relaxed",
+    "Enjoy a slow café or leisure experience"
+  ]
+};
+
+// --------------------------------------------
+// WEATHER CODE → TEXT
+// --------------------------------------------
+
+function getWeatherDescription(code) {
+  const weatherCodes = {
+    0: "Clear sky",
+    1: "Mainly clear",
+    2: "Partly cloudy",
+    3: "Overcast",
+    45: "Foggy",
+    48: "Foggy",
+    51: "Light drizzle",
+    53: "Drizzle",
+    55: "Heavy drizzle",
+    56: "Freezing drizzle",
+    57: "Freezing drizzle",
+    61: "Light rain",
+    63: "Rain",
+    65: "Heavy rain",
+    66: "Freezing rain",
+    67: "Heavy freezing rain",
+    71: "Light snowfall",
+    73: "Snowfall",
+    75: "Heavy snowfall",
+    77: "Snow grains",
+    80: "Rain showers",
+    81: "Rain showers",
+    82: "Heavy rain showers",
+    85: "Snow showers",
+    86: "Heavy snow showers",
+    95: "Thunderstorm",
+    96: "Thunderstorm with hail",
+    99: "Thunderstorm with heavy hail"
+  };
+
+  return weatherCodes[code] || "Weather information available";
+}
+
+// --------------------------------------------
+// WEATHER ICON
+// --------------------------------------------
+
+function getWeatherIcon(code) {
+  if (code === 0) return "☀️";
+
+  if ([1, 2].includes(code)) return "🌤️";
+
+  if ([3, 45, 48].includes(code)) return "☁️";
+
+  if ([51, 53, 55, 56, 57].includes(code)) return "🌦️";
+
+  if (
+    [61, 63, 65, 66, 67, 80, 81, 82].includes(code)
+  ) {
+    return "🌧️";
   }
 
+  if ([71, 73, 75, 77, 85, 86].includes(code)) {
+    return "❄️";
+  }
+
+  if ([95, 96, 99].includes(code)) {
+    return "⛈️";
+  }
+
+  return "🌍";
+}
+
+// --------------------------------------------
+// GEOCODE DESTINATION
+// --------------------------------------------
+
+async function getCoordinates(destination) {
+  const url =
+    `https://geocoding-api.open-meteo.com/v1/search?` +
+    `name=${encodeURIComponent(destination)}` +
+    `count=1&language=en&format=json`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Could not find destination.");
+  }
+
+  const data = await response.json();
+
+  if (!data.results || data.results.length === 0) {
+    throw new Error(
+      `We couldn't find "${destination}". Try a city name like Goa, Delhi or Manali.`
+    );
+  }
+
+  const result = data.results[0];
+
   return {
-    places: genericPlaces,
-    food: [
-      "Local street food",
-      "Regional speciality",
-      "Popular local restaurant"
-    ],
-    adventure: [
-      "Local adventure activity",
-      "City exploration",
-      "Outdoor experience"
-    ],
-    nature: [
-      "Local park",
-      "Scenic viewpoint",
-      "Nature walk"
-    ],
-    culture: [
-      "Local museum",
-      "Historic landmark",
-      "Cultural district"
-    ],
-    relaxation: [
-      "Café hopping",
-      "Sunset walk",
-      "Relaxing local experience"
-    ]
+    latitude: result.latitude,
+    longitude: result.longitude,
+    name: result.name,
+    country: result.country || ""
   };
 }
 
+// --------------------------------------------
+// GET LIVE WEATHER
+// --------------------------------------------
 
-/* ==========================================
-   GET SELECTED INTERESTS
-========================================== */
+async function getWeather(latitude, longitude) {
+  const url =
+    `https://api.open-meteo.com/v1/forecast?` +
+    `latitude=${latitude}` +
+    `&longitude=${longitude}` +
+    `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation` +
+    `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code` +
+    `&forecast_days=7` +
+    `&timezone=auto`;
 
-function getSelectedInterests() {
+  const response = await fetch(url);
 
-  return Array.from(
-    document.querySelectorAll(".interest.selected")
-  ).map((item) => item.dataset.interest);
-
-}
-
-
-/* ==========================================
-   GET TRAVELLER TYPE
-========================================== */
-
-function getTravellerType() {
-
-  const selected = document.querySelector(
-    'input[name="travellers"]:checked'
-  );
-
-  return selected ? selected.value : "solo";
-
-}
-
-
-/* ==========================================
-   CREATE ACTIVITY LIST
-========================================== */
-
-function createActivityPool(data, selectedInterests) {
-
-  let pool = [];
-
-  selectedInterests.forEach((interest) => {
-
-    if (data[interest]) {
-      pool.push(...data[interest]);
-    }
-
-  });
-
-  if (pool.length === 0) {
-    pool = [...data.places];
+  if (!response.ok) {
+    throw new Error("Weather service is currently unavailable.");
   }
 
-  return [...new Set(pool)];
-
+  return await response.json();
 }
 
+// --------------------------------------------
+// WEATHER TRAVEL NOTE
+// --------------------------------------------
 
-/* ==========================================
-   GENERATE DAILY ITINERARY
-========================================== */
+function getTravelWeatherNote(weatherCode, temperature) {
+  if ([95, 96, 99].includes(weatherCode)) {
+    return "⛈️ Thunderstorms are possible. Keep outdoor activities flexible.";
+  }
 
-function generateDays(days, data, selectedInterests) {
+  if (
+    [61, 63, 65, 80, 81, 82].includes(weatherCode)
+  ) {
+    return "☔ Rain is possible. Keep an umbrella and a backup indoor plan.";
+  }
 
-  const activities = createActivityPool(
-    data,
-    selectedInterests
-  );
+  if (temperature >= 35) {
+    return "🌡️ It is quite warm. Plan outdoor activities during cooler hours.";
+  }
+
+  if (temperature <= 10) {
+    return "🧥 It is cold. Carry warm layers for outdoor activities.";
+  }
+
+  if ([0, 1].includes(weatherCode)) {
+    return "☀️ Clear conditions look comfortable for outdoor exploration.";
+  }
+
+  return "🌤️ Conditions look fairly comfortable. Keep checking the forecast before heading out.";
+}
+
+// --------------------------------------------
+// GENERATE DAY PLAN
+// --------------------------------------------
+
+function generateDayPlan(destination, days) {
+  const key = destination.toLowerCase().trim();
+  const data = destinationData[key];
+
+  const places = data
+    ? data.places
+    : [
+        `Explore ${destination}`,
+        `Visit a popular attraction in ${destination}`,
+        `Explore the local market`,
+        `Discover a cultural landmark`,
+        `Enjoy a scenic location`,
+        `Try a local food experience`
+      ];
+
+  const selectedActivities = [];
+
+  selectedInterests.forEach((interest) => {
+    if (interestActivities[interest]) {
+      selectedActivities.push(...interestActivities[interest]);
+    }
+  });
 
   const itinerary = [];
 
   for (let i = 0; i < days; i++) {
+    const place = places[i % places.length];
 
-    const morning =
-      activities[(i * 2) % activities.length];
-
-    const afternoon =
-      activities[(i * 2 + 1) % activities.length];
-
-    const evening =
-      data.relaxation[
-        i % data.relaxation.length
-      ];
+    let activity =
+      selectedActivities.length > 0
+        ? selectedActivities[i % selectedActivities.length]
+        : "Explore the destination and discover local experiences";
 
     itinerary.push({
-
       day: i + 1,
-
-      title:
-        i === 0
-          ? "Arrival & First Impressions"
-          : i === days - 1
-          ? "Final Day & Slow Down"
-          : "Explore & Experience",
-
-      morning,
-
-      afternoon,
-
-      evening
-
+      title: place,
+      activity
     });
-
   }
 
   return itinerary;
 }
 
+// --------------------------------------------
+// BUDGET CALCULATOR
+// --------------------------------------------
 
-/* ==========================================
-   BUDGET CALCULATOR
-========================================== */
+function generateBudget(totalBudget, travellers, days) {
+  const budget = Number(totalBudget);
 
-function calculateBudget(
-  budget,
-  days,
-  traveller
-) {
+  let accommodation = 0.30;
+  let food = 0.20;
+  let transport = 0.20;
+  let activities = 0.15;
+  let buffer = 0.15;
 
-  let stayPercent = 0.35;
-  let foodPercent = 0.20;
-  let transportPercent = 0.20;
-  let activitiesPercent = 0.15;
-  let emergencyPercent = 0.10;
-
-  if (traveller === "family") {
-    stayPercent = 0.40;
-    foodPercent = 0.22;
+  if (travellers === "solo") {
+    accommodation = 0.28;
+    food = 0.20;
+    transport = 0.18;
+    activities = 0.17;
+    buffer = 0.17;
   }
 
-  if (traveller === "solo") {
-    activitiesPercent = 0.18;
-    emergencyPercent = 0.07;
+  if (travellers === "family") {
+    accommodation = 0.35;
+    food = 0.25;
+    transport = 0.18;
+    activities = 0.10;
+    buffer = 0.12;
   }
 
   return {
-
-    stay: Math.round(budget * stayPercent),
-
-    food: Math.round(budget * foodPercent),
-
-    transport: Math.round(budget * transportPercent),
-
-    activities: Math.round(
-      budget * activitiesPercent
-    ),
-
-    emergency: Math.round(
-      budget * emergencyPercent
-    )
-
+    accommodation: Math.round(budget * accommodation),
+    food: Math.round(budget * food),
+    transport: Math.round(budget * transport),
+    activities: Math.round(budget * activities),
+    buffer: Math.round(budget * buffer)
   };
 }
 
-
-/* ==========================================
-   FORMAT MONEY
-========================================== */
+// --------------------------------------------
+// FORMAT MONEY
+// --------------------------------------------
 
 function formatMoney(amount) {
-
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0
-  }).format(amount);
-
+  return `₹${Number(amount).toLocaleString("en-IN")}`;
 }
 
+// --------------------------------------------
+// WEATHER FORECAST HTML
+// --------------------------------------------
 
-/* ==========================================
-   RESULT HTML
-========================================== */
+function createForecastHTML(weather) {
+  if (!weather.daily || !weather.daily.time) {
+    return "";
+  }
 
-function createResultHTML(
-  destination,
-  days,
-  budget,
-  traveller,
-  selectedInterests,
-  itinerary,
-  budgetData
-) {
+  const days = Math.min(weather.daily.time.length, 5);
 
-  const interestText =
-    selectedInterests.length
-      ? selectedInterests
-          .map(
-            (item) =>
-              item.charAt(0).toUpperCase() +
-              item.slice(1)
-          )
-          .join(" • ")
-      : "Balanced experience";
+  let html = "";
 
+  for (let i = 0; i < days; i++) {
+    const date = new Date(weather.daily.time[i]);
 
-  const travellerLabel =
-    traveller.charAt(0).toUpperCase() +
-    traveller.slice(1);
+    const dayName = date.toLocaleDateString("en-IN", {
+      weekday: "short"
+    });
 
+    const max = Math.round(weather.daily.temperature_2m_max[i]);
+    const min = Math.round(weather.daily.temperature_2m_min[i]);
 
-  const itineraryHTML =
-    itinerary
-      .map(
-        (day) => `
-          <article class="generated-day">
+    const rain =
+      weather.daily.precipitation_probability_max?.[i] ?? 0;
 
-            <div class="generated-day-number">
-              DAY ${String(day.day).padStart(2, "0")}
-            </div>
+    const code = weather.daily.weather_code[i];
 
-            <div class="generated-day-content">
+    html += `
+      <div class="forecast-item">
+        <span class="forecast-day">${dayName}</span>
+        <span class="forecast-icon">${getWeatherIcon(code)}</span>
+        <span class="forecast-temp">${min}° / ${max}°</span>
+        <span class="forecast-rain">💧 ${rain}%</span>
+      </div>
+    `;
+  }
 
-              <h3>${day.title}</h3>
+  return html;
+}
 
-              <div class="activity-row">
+// --------------------------------------------
+// WEATHER CARD
+// --------------------------------------------
 
-                <div>
-                  <span>🌅 Morning</span>
-                  <strong>${day.morning}</strong>
-                </div>
+function createWeatherCard(weather, location) {
+  const current = weather.current;
 
-                <div>
-                  <span>☀️ Afternoon</span>
-                  <strong>${day.afternoon}</strong>
-                </div>
+  if (!current) {
+    return `
+      <div class="weather-card">
+        <p>Weather information is currently unavailable.</p>
+      </div>
+    `;
+  }
 
-                <div>
-                  <span>🌙 Evening</span>
-                  <strong>${day.evening}</strong>
-                </div>
+  const temperature = Math.round(current.temperature_2m);
+  const feelsLike = Math.round(current.apparent_temperature);
+  const humidity = current.relative_humidity_2m;
+  const wind = Math.round(current.wind_speed_10m);
+  const precipitation = current.precipitation || 0;
+  const code = current.weather_code;
 
-              </div>
+  const condition = getWeatherDescription(code);
+  const icon = getWeatherIcon(code);
 
-            </div>
-
-          </article>
-        `
-      )
-      .join("");
-
+  const note = getTravelWeatherNote(code, temperature);
 
   return `
+    <div class="weather-card">
 
-    <section class="trip-results" id="tripResults">
-
-      <div class="results-header">
-
+      <div class="weather-header">
         <div>
-
-          <span class="eyebrow">
-            YOUR SMART ITINERARY
-          </span>
-
-          <h2>
-            ${destination}
-            <span>is calling.</span>
-          </h2>
-
-          <p>
-            A ${days}-day ${travellerLabel.toLowerCase()}
-            trip built around your preferences.
-          </p>
-
+          <p class="weather-label">LIVE DESTINATION WEATHER</p>
+          <h3>${icon} ${location.name}</h3>
+          <span>${location.country}</span>
         </div>
 
-        <button
-          class="new-trip-btn"
-          onclick="scrollToPlanner()"
-        >
-          ← Plan another trip
-        </button>
-
+        <div class="weather-temperature">
+          ${temperature}°C
+        </div>
       </div>
 
+      <div class="weather-condition">
+        <strong>${condition}</strong>
+        <span>Feels like ${feelsLike}°C</span>
+      </div>
 
-      <div class="trip-summary">
+      <div class="weather-stats">
 
-        <div class="summary-card">
-
-          <span>📅</span>
-
-          <small>Duration</small>
-
-          <strong>${days} Days</strong>
-
+        <div class="weather-stat">
+          <span>💧</span>
+          <div>
+            <small>Humidity</small>
+            <strong>${humidity}%</strong>
+          </div>
         </div>
 
-
-        <div class="summary-card">
-
-          <span>💰</span>
-
-          <small>Total budget</small>
-
-          <strong>${formatMoney(budget)}</strong>
-
+        <div class="weather-stat">
+          <span>💨</span>
+          <div>
+            <small>Wind</small>
+            <strong>${wind} km/h</strong>
+          </div>
         </div>
 
-
-        <div class="summary-card">
-
-          <span>👥</span>
-
-          <small>Travelling</small>
-
-          <strong>${travellerLabel}</strong>
-
-        </div>
-
-
-        <div class="summary-card">
-
-          <span>❤️</span>
-
-          <small>Interests</small>
-
-          <strong>${interestText}</strong>
-
+        <div class="weather-stat">
+          <span>🌧️</span>
+          <div>
+            <small>Precipitation</small>
+            <strong>${precipitation} mm</strong>
+          </div>
         </div>
 
       </div>
 
-
-      <div class="results-layout">
-
-
-        <div class="itinerary-box">
-
-          <div class="results-box-heading">
-
-            <div>
-              <span class="eyebrow">
-                DAY BY DAY
-              </span>
-
-              <h3>Your itinerary</h3>
-            </div>
-
-            <span class="smart-badge">
-              ✦ Smart Plan
-            </span>
-
-          </div>
-
-          <div class="generated-days">
-
-            ${itineraryHTML}
-
-          </div>
-
-        </div>
-
-
-        <aside class="budget-box">
-
-          <span class="eyebrow">
-            BUDGET BREAKDOWN
-          </span>
-
-          <h3>Where your money goes</h3>
-
-          <div class="budget-list">
-
-            <div class="budget-item">
-              <span>🏨 Stay</span>
-              <strong>${formatMoney(budgetData.stay)}</strong>
-            </div>
-
-            <div class="budget-item">
-              <span>🍜 Food</span>
-              <strong>${formatMoney(budgetData.food)}</strong>
-            </div>
-
-            <div class="budget-item">
-              <span>🚕 Transport</span>
-              <strong>${formatMoney(budgetData.transport)}</strong>
-            </div>
-
-            <div class="budget-item">
-              <span>🎟️ Activities</span>
-              <strong>${formatMoney(budgetData.activities)}</strong>
-            </div>
-
-            <div class="budget-item">
-              <span>🛟 Emergency</span>
-              <strong>${formatMoney(budgetData.emergency)}</strong>
-            </div>
-
-          </div>
-
-          <div class="budget-total">
-
-            <span>Total planned</span>
-
-            <strong>${formatMoney(budget)}</strong>
-
-          </div>
-
-        </aside>
-
+      <div class="weather-note">
+        ${note}
       </div>
 
-
-      <div class="smart-note">
-
-        <div class="smart-note-icon">✦</div>
-
-        <div>
-
-          <strong>Your trip is personalized.</strong>
-
-          <p>
-            This plan uses your destination, trip length,
-            budget, traveller type and selected interests
-            to create a balanced starting itinerary.
-          </p>
-
-        </div>
-
+      <div class="forecast-title">
+        5-Day Forecast
       </div>
 
-    </section>
+      <div class="forecast-list">
+        ${createForecastHTML(weather)}
+      </div>
 
+      <div class="weather-source">
+        Weather data powered by Open-Meteo
+      </div>
+
+    </div>
   `;
-
 }
 
+// --------------------------------------------
+// RESULT STYLES
+// --------------------------------------------
 
-/* ==========================================
-   ADD RESULT STYLES
-========================================== */
-
-function addResultStyles() {
-
-  if (document.getElementById("resultStyles")) {
-    return;
-  }
+function injectResultStyles() {
+  if (document.getElementById("smartTravelResultStyles")) return;
 
   const style = document.createElement("style");
 
-  style.id = "resultStyles";
+  style.id = "smartTravelResultStyles";
 
   style.textContent = `
-
-    .trip-results {
-      width: min(1180px, calc(100% - 40px));
-      margin: 20px auto 110px;
-      animation: resultAppear 0.7s ease;
+    .trip-result {
+      margin-top: 70px;
+      animation: resultFade 0.6s ease;
     }
 
-    @keyframes resultAppear {
+    @keyframes resultFade {
       from {
         opacity: 0;
-        transform: translateY(25px);
+        transform: translateY(20px);
       }
 
       to {
@@ -866,469 +586,591 @@ function addResultStyles() {
       }
     }
 
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 30px;
-      margin-bottom: 35px;
+    .result-header {
+      margin-bottom: 30px;
     }
 
-    .results-header h2 {
-      font-family: "Playfair Display", serif;
-      color: var(--green);
-      font-size: clamp(42px, 5vw, 64px);
-      line-height: 1;
-      letter-spacing: -2px;
-    }
-
-    .results-header h2 span {
-      color: var(--orange);
-      font-style: italic;
-    }
-
-    .results-header p {
-      color: var(--muted);
-      margin-top: 15px;
-    }
-
-    .new-trip-btn {
-      border: 1px solid var(--border);
-      background: white;
-      color: var(--green);
-      padding: 12px 18px;
-      border-radius: 50px;
-      font-weight: 600;
-    }
-
-    .trip-summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .summary-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
-    }
-
-    .summary-card > span {
-      display: block;
-      font-size: 23px;
-      margin-bottom: 15px;
-    }
-
-    .summary-card small {
-      display: block;
-      color: var(--muted);
-      font-size: 10px;
-      margin-bottom: 5px;
-    }
-
-    .summary-card strong {
-      display: block;
-      color: var(--green);
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .results-layout {
-      display: grid;
-      grid-template-columns: 1.5fr 0.8fr;
-      gap: 18px;
-    }
-
-    .itinerary-box,
-    .budget-box {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 25px;
-      padding: 30px;
-    }
-
-    .results-box-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .results-box-heading h3,
-    .budget-box h3 {
-      color: var(--green);
-      font-size: 24px;
-    }
-
-    .smart-badge {
-      background: var(--green-light);
-      color: var(--green);
-      padding: 8px 12px;
-      border-radius: 50px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .generated-days {
-      display: grid;
-      gap: 10px;
-    }
-
-    .generated-day {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 15px;
-      padding: 18px;
-      border-radius: 15px;
-      background: var(--bg);
-    }
-
-    .generated-day-number {
-      color: var(--orange);
-      font-size: 10px;
+    .result-header span {
+      display: inline-block;
+      font-size: 12px;
       font-weight: 800;
-      padding-top: 3px;
+      letter-spacing: 1.5px;
+      color: #e8894f;
+      margin-bottom: 8px;
     }
 
-    .generated-day-content h3 {
-      color: var(--green);
-      font-size: 15px;
-      margin-bottom: 15px;
+    .result-header h2 {
+      font-size: clamp(30px, 5vw, 48px);
+      margin: 0;
+      color: #173f35;
     }
 
-    .activity-row {
+    .result-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
     }
 
-    .activity-row div {
-      background: white;
-      padding: 12px;
-      border-radius: 10px;
+    .result-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 15px 45px rgba(23, 63, 53, 0.08);
     }
 
-    .activity-row span {
-      display: block;
-      color: var(--muted);
-      font-size: 9px;
-      margin-bottom: 5px;
+    .result-card h3 {
+      margin-top: 0;
+      color: #173f35;
     }
 
-    .activity-row strong {
-      color: var(--green);
-      font-size: 11px;
-      line-height: 1.35;
+    .itinerary-list {
+      display: grid;
+      gap: 14px;
     }
 
-    .budget-box {
-      align-self: start;
+    .itinerary-item {
+      display: grid;
+      grid-template-columns: 55px 1fr;
+      gap: 15px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 16px;
+      background: #f6f1e8;
     }
 
-    .budget-box > h3 {
-      margin-bottom: 25px;
+    .day-number {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #173f35;
+      color: white;
+      font-weight: 800;
+    }
+
+    .itinerary-item h4 {
+      margin: 0 0 5px;
+      color: #173f35;
+    }
+
+    .itinerary-item p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
     }
 
     .budget-list {
       display: grid;
-      gap: 15px;
+      gap: 14px;
     }
 
-    .budget-item {
+    .budget-row {
       display: flex;
       justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .budget-row strong {
+      color: #173f35;
+    }
+
+    .weather-card {
+      grid-column: 1 / -1;
+      background: #173f35;
+      color: white;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(23, 63, 53, 0.18);
+    }
+
+    .weather-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       gap: 20px;
-      padding-bottom: 13px;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
     }
 
-    .budget-item strong {
-      color: var(--green);
+    .weather-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      opacity: 0.65;
+      margin: 0 0 7px;
+      font-weight: 800;
     }
 
-    .budget-total {
-      margin-top: 20px;
-      padding-top: 5px;
+    .weather-header h3 {
+      color: white;
+      margin: 0 0 5px;
+      font-size: 28px;
+    }
+
+    .weather-header span {
+      opacity: 0.7;
+    }
+
+    .weather-temperature {
+      font-size: 58px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .weather-condition {
+      margin-top: 22px;
       display: flex;
-      justify-content: space-between;
-      color: var(--green);
+      gap: 15px;
+      align-items: center;
+    }
+
+    .weather-condition strong {
+      font-size: 18px;
+    }
+
+    .weather-condition span {
+      opacity: 0.7;
+    }
+
+    .weather-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .weather-stat {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 15px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 16px;
+    }
+
+    .weather-stat > span {
+      font-size: 22px;
+    }
+
+    .weather-stat small {
+      display: block;
+      opacity: 0.6;
+      margin-bottom: 3px;
+    }
+
+    .weather-stat strong {
+      display: block;
+    }
+
+    .weather-note {
+      margin-top: 20px;
+      padding: 15px 18px;
+      border-radius: 14px;
+      background: rgba(232, 137, 79, 0.16);
+      color: #fff4ec;
+    }
+
+    .forecast-title {
+      margin-top: 28px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .forecast-list {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .forecast-item {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: center;
+      padding: 13px 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .forecast-day {
+      font-size: 12px;
+      opacity: 0.65;
+    }
+
+    .forecast-icon {
+      font-size: 22px;
+    }
+
+    .forecast-temp {
+      font-size: 12px;
       font-weight: 700;
     }
 
-    .smart-note {
+    .forecast-rain {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .weather-source {
       margin-top: 18px;
-      padding: 20px 24px;
-      border-radius: 18px;
-      background: var(--green);
-      color: white;
+      font-size: 10px;
+      opacity: 0.45;
+      text-align: right;
+    }
+
+    .trip-meta {
       display: flex;
-      align-items: flex-start;
-      gap: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
     }
 
-    .smart-note-icon {
-      font-size: 22px;
-      color: var(--orange-light);
-    }
-
-    .smart-note strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .smart-note p {
-      color: rgba(255,255,255,0.65);
-      font-size: 11px;
-      line-height: 1.6;
+    .trip-tag {
+      background: #dce9df;
+      color: #173f35;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     @media (max-width: 800px) {
-
-      .results-header {
-        display: block;
-      }
-
-      .new-trip-btn {
-        margin-top: 20px;
-      }
-
-      .trip-summary {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .results-layout {
+      .result-grid {
         grid-template-columns: 1fr;
       }
 
-      .activity-row {
+      .weather-card {
+        grid-column: auto;
+      }
+
+      .weather-stats {
         grid-template-columns: 1fr;
       }
 
+      .forecast-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .weather-header {
+        align-items: flex-start;
+      }
+
+      .weather-temperature {
+        font-size: 42px;
+      }
     }
 
     @media (max-width: 500px) {
-
-      .trip-results {
-        width: calc(100% - 28px);
+      .weather-header {
+        flex-direction: column;
       }
 
-      .trip-summary {
-        grid-template-columns: 1fr;
+      .forecast-list {
+        grid-template-columns: repeat(2, 1fr);
       }
-
-      .itinerary-box,
-      .budget-box {
-        padding: 20px;
-      }
-
-      .generated-day {
-        grid-template-columns: 1fr;
-      }
-
     }
-
   `;
 
   document.head.appendChild(style);
-
 }
 
+// --------------------------------------------
+// TOAST
+// --------------------------------------------
 
-/* ==========================================
-   FORM SUBMISSION
-========================================== */
+function showToast(message) {
+  let toast = document.getElementById("travelToast");
 
-travelForm.addEventListener("submit", (event) => {
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "travelToast";
 
+    Object.assign(toast.style, {
+      position: "fixed",
+      bottom: "25px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      background: "#173f35",
+      color: "#fff",
+      padding: "13px 20px",
+      borderRadius: "999px",
+      zIndex: "9999",
+      fontSize: "14px",
+      boxShadow: "0 10px 30px rgba(0,0,0,.2)"
+    });
+
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+
+  clearTimeout(window.travelToastTimer);
+
+  window.travelToastTimer = setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+// --------------------------------------------
+// GENERATE TRIP
+// --------------------------------------------
+
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const destination =
-    destinationInput.value.trim();
+  const destinationInput = document.getElementById("destination");
+  const daysInput = document.getElementById("days");
+  const budgetInput = document.getElementById("budget");
 
-  const days =
-    Number(daysInput.value);
+  const destination = destinationInput.value.trim();
+  const days = Number(daysInput.value);
+  const budget = Number(budgetInput.value);
 
-  const budget =
-    Number(budgetInput.value);
+  const travellerInput = document.querySelector(
+    "input[name='travellers']:checked"
+  );
 
-  const traveller =
-    getTravellerType();
-
-  const selectedInterests =
-    getSelectedInterests();
-
-
-  /* Validation */
+  const travellerType = travellerInput
+    ? travellerInput.value
+    : "solo";
 
   if (!destination) {
-    showToast("Please enter a destination.");
+    showToast("Please enter your destination.");
     destinationInput.focus();
     return;
   }
 
-  if (!days || days < 1) {
-    showToast("Please enter a valid trip duration.");
+  if (!days || days < 1 || days > 30) {
+    showToast("Trip duration should be between 1 and 30 days.");
     daysInput.focus();
     return;
   }
 
-  if (!budget || budget < 500) {
+  if (!budget || budget <= 0) {
     showToast("Please enter a valid budget.");
     budgetInput.focus();
     return;
   }
 
+  const button = form.querySelector(".generate-btn");
 
-  /* Generate */
+  const originalButtonText = button
+    ? button.innerHTML
+    : "";
 
-  const data =
-    getDestinationData(destination);
-
-  const itinerary =
-    generateDays(
-      days,
-      data,
-      selectedInterests
-    );
-
-  const budgetData =
-    calculateBudget(
-      budget,
-      days,
-      traveller
-    );
-
-
-  addResultStyles();
-
-
-  const oldResults =
-    document.getElementById("tripResults");
-
-  if (oldResults) {
-    oldResults.remove();
+  if (button) {
+    button.disabled = true;
+    button.innerHTML = "🌍 Building your trip...";
   }
 
+  try {
+    injectResultStyles();
 
-  const resultHTML =
-    createResultHTML(
-      destination,
-      days,
-      budget,
-      traveller,
-      selectedInterests,
-      itinerary,
-      budgetData
+    // Get coordinates first
+    const location = await getCoordinates(destination);
+
+    // Get live weather
+    const weather = await getWeather(
+      location.latitude,
+      location.longitude
     );
 
+    // Generate itinerary
+    const itinerary = generateDayPlan(
+      location.name,
+      days
+    );
 
-  document
-    .querySelector(".planner-section")
-    .insertAdjacentHTML(
+    // Generate budget
+    const budgetBreakdown = generateBudget(
+      budget,
+      travellerType,
+      days
+    );
+
+    const resultHTML = `
+      <section class="trip-result" id="tripResult">
+
+        <div class="result-header">
+          <span>YOUR SMART TRAVEL PLAN</span>
+
+          <h2>
+            ${location.name} is ready. ✈️
+          </h2>
+
+          <div class="trip-meta">
+            <span class="trip-tag">
+              ${days} Days
+            </span>
+
+            <span class="trip-tag">
+              ${formatMoney(budget)}
+            </span>
+
+            <span class="trip-tag">
+              ${travellerType}
+            </span>
+
+            ${
+              selectedInterests.length
+                ? `
+                  <span class="trip-tag">
+                    ${selectedInterests.length} interests
+                  </span>
+                `
+                : ""
+            }
+          </div>
+        </div>
+
+        <div class="result-grid">
+
+          ${createWeatherCard(weather, location)}
+
+          <div class="result-card">
+            <h3>🗓️ Your Itinerary</h3>
+
+            <div class="itinerary-list">
+              ${itinerary
+                .map(
+                  (item) => `
+                    <div class="itinerary-item">
+
+                      <div class="day-number">
+                        ${item.day}
+                      </div>
+
+                      <div>
+                        <h4>
+                          ${item.title}
+                        </h4>
+
+                        <p>
+                          ${item.activity}
+                        </p>
+                      </div>
+
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+          </div>
+
+          <div class="result-card">
+
+            <h3>💰 Smart Budget</h3>
+
+            <div class="budget-list">
+
+              <div class="budget-row">
+                <span>🏨 Accommodation</span>
+                <strong>
+                  ${formatMoney(
+                    budgetBreakdown.accommodation
+                  )}
+                </strong>
+              </div>
+
+              <div class="budget-row">
+                <span>🍴 Food</span>
+                <strong>
+                  ${formatMoney(
+                    budgetBreakdown.food
+                  )}
+                </strong>
+              </div>
+
+              <div class="budget-row">
+                <span>🚕 Transport</span>
+                <strong>
+                  ${formatMoney(
+                    budgetBreakdown.transport
+                  )}
+                </strong>
+              </div>
+
+              <div class="budget-row">
+                <span>🎟️ Activities</span>
+                <strong>
+                  ${formatMoney(
+                    budgetBreakdown.activities
+                  )}
+                </strong>
+              </div>
+
+              <div class="budget-row">
+                <span>🛟 Emergency Buffer</span>
+                <strong>
+                  ${formatMoney(
+                    budgetBreakdown.buffer
+                  )}
+                </strong>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+    `;
+
+    const existingResult =
+      document.getElementById("tripResult");
+
+    if (existingResult) {
+      existingResult.remove();
+    }
+
+    form.insertAdjacentHTML(
       "afterend",
       resultHTML
     );
 
+    document
+      .getElementById("tripResult")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
 
-  const results =
-    document.getElementById("tripResults");
+  } catch (error) {
+    console.error(error);
 
-
-  setTimeout(() => {
-
-    results.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-  }, 100);
-
+    showToast(
+      error.message ||
+      "Something went wrong while creating your trip."
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.innerHTML = originalButtonText;
+    }
+  }
 });
 
+// --------------------------------------------
+// SMOOTH NAVIGATION
+// --------------------------------------------
 
-/* ==========================================
-   SCROLL TO PLANNER
-========================================== */
+document.querySelectorAll("a[href^='#']").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const targetId = link.getAttribute("href");
 
-function scrollToPlanner() {
+    if (!targetId || targetId === "#") return;
 
-  const planner =
-    document.getElementById("planner");
+    const target = document.querySelector(targetId);
 
-  if (!planner) return;
+    if (target) {
+      event.preventDefault();
 
-  planner.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+      target.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
   });
-
-}
-
-
-/* ==========================================
-   TOAST
-========================================== */
-
-function showToast(message) {
-
-  let toast =
-    document.getElementById("smartToast");
-
-
-  if (!toast) {
-
-    toast =
-      document.createElement("div");
-
-    toast.id = "smartToast";
-
-    toast.style.cssText = `
-      position: fixed;
-      left: 50%;
-      bottom: 25px;
-      transform: translateX(-50%);
-      z-index: 9999;
-      background: #173f35;
-      color: white;
-      padding: 13px 20px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 600;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-      transition: opacity 0.25s ease;
-    `;
-
-    document.body.appendChild(toast);
-
-  }
-
-
-  toast.textContent = message;
-
-  toast.style.opacity = "1";
-
-
-  clearTimeout(window.smartToastTimer);
-
-
-  window.smartToastTimer =
-    setTimeout(() => {
-
-      toast.style.opacity = "0";
-
-    }, 2500);
-
-}
-
-
-/* ==========================================
-   INITIAL STATE
-========================================== */
-
-console.log(
-  "✈️ Smart Travel initialized successfully."
-);
+});
