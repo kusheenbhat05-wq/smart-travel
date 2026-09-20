@@ -98,6 +98,84 @@ document.querySelectorAll(".interest").forEach((button) => {
     button.classList.add("active", "selected");
   });
 });
+/* =========================================================
+   TRAVELLER + PACE SELECTION
+   ========================================================= */
+
+document.querySelectorAll(".choice-card").forEach((card) => {
+  card.addEventListener("click", () => {
+
+    const group = card.closest(".choice-grid");
+
+    if (group) {
+      group.querySelectorAll(".choice-card").forEach((item) => {
+        item.classList.remove("selected");
+      });
+    }
+
+    card.classList.add("selected");
+
+    const input = card.querySelector('input[type="radio"]');
+
+    if (input) {
+      input.checked = true;
+    }
+  });
+});
+
+
+document.querySelectorAll(".pace-card").forEach((card) => {
+  card.addEventListener("click", () => {
+
+    const group = card.closest(".pace-grid");
+
+    if (group) {
+      group.querySelectorAll(".pace-card").forEach((item) => {
+        item.classList.remove("selected");
+      });
+    }
+
+    card.classList.add("selected");
+
+    const input = card.querySelector('input[type="radio"]');
+
+    if (input) {
+      input.checked = true;
+    }
+  });
+});
+
+
+/* Keyboard / radio change support */
+
+document
+  .querySelectorAll('input[name="travellers"], input[name="pace"]')
+  .forEach((input) => {
+
+    input.addEventListener("change", () => {
+
+      const group =
+        input.closest(".choice-grid") ||
+        input.closest(".pace-grid");
+
+      if (group) {
+        group
+          .querySelectorAll(".choice-card, .pace-card")
+          .forEach((card) => {
+            card.classList.remove("selected");
+          });
+      }
+
+      const parentCard =
+        input.closest(".choice-card, .pace-card");
+
+      if (parentCard) {
+        parentCard.classList.add("selected");
+      }
+
+    });
+
+  });
 
 /* =========================================================
    DEFAULT DATE
