@@ -380,15 +380,11 @@ async function generateTrip(config) {
   }
 }
 
-/* =========================================================
-   GEOCODING — OPEN-METEO
-   ========================================================= */
-
 async function geocodeDestination(destination) {
   const url =
     `https://geocoding-api.open-meteo.com/v1/search` +
     `?name=${encodeURIComponent(destination)}` +
-    `&count=1` +
+    `&count=10` +
     `&language=en` +
     `&format=json`;
 
@@ -404,7 +400,17 @@ async function geocodeDestination(destination) {
     return null;
   }
 
-  const result = data.results[0];
+  const results = data.results;
+
+  // Prefer India when the destination has an Indian match.
+  // This prevents names like "Kashmir" from matching an unrelated
+  // location in another country.
+  const indianResult = results.find(
+    (result) =>
+      String(result.country_code || "").toUpperCase() === "IN"
+  );
+
+  const result = indianResult || results[0];
 
   return {
     name: result.name,
@@ -415,7 +421,6 @@ async function geocodeDestination(destination) {
     timezone: result.timezone || "auto"
   };
 }
-
 /* =========================================================
    WEATHER — OPEN-METEO
    ========================================================= */
