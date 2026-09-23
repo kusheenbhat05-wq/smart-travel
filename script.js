@@ -482,87 +482,98 @@ function weatherInfo(code) {
   return map[code] || ["🌤️", "Variable weather"];
 }
 
-/* =========================================================
-   OPENSTREETMAP / OVERPASS
-   ========================================================= */
-
 async function getNearbyPlaces(latitude, longitude) {
   const query = `
-    [out:json][timeout:20];
+    [out:json][timeout:10];
 
     (
-      node(around:5000,${latitude},${longitude})[tourism];
-      way(around:5000,${latitude},${longitude})[tourism];
+      node(around:3000,${latitude},${longitude})[tourism];
+      way(around:3000,${latitude},${longitude})[tourism];
 
-      node(around:5000,${latitude},${longitude})[amenity~"restaurant|cafe|bar"];
-      way(around:5000,${latitude},${longitude})[amenity~"restaurant|cafe|bar"];
+      node(around:3000,${latitude},${longitude})[amenity~"restaurant|cafe|bar"];
+      way(around:3000,${latitude},${longitude})[amenity~"restaurant|cafe|bar"];
 
-      node(around:5000,${latitude},${longitude})[leisure~"park|nature_reserve"];
-      way(around:5000,${latitude},${longitude})[leisure~"park|nature_reserve"];
+      node(around:3000,${latitude},${longitude})[leisure~"park|nature_reserve"];
+      way(around:3000,${latitude},${longitude})[leisure~"park|nature_reserve"];
     );
 
     out center tags;
   `;
 
-  const url =
-    "https://overpass-api.de/api/interpreter?data=" +
-    encodeURIComponent(query);
+  const servers = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter"
+  ];
 
-  const response = await fetch(url);
+  for (const server of servers) {
+    try {
+      const url =
+        server + "?data=" + encodeURIComponent(query);
 
-  if (!response.ok) {
-    throw new Error("Places service unavailable.");
-  }
+      const response = await fetch(url);
 
-  const data = await response.json();
-
-  if (!data.elements) {
-    return [];
-  }
-
-  return data.elements
-    .map((element) => {
-      const tags = element.tags || {};
-
-      const latitudeValue =
-        element.lat ??
-        element.center?.lat;
-
-      const longitudeValue =
-        element.lon ??
-        element.center?.lon;
-
-      if (
-        typeof latitudeValue !== "number" ||
-        typeof longitudeValue !== "number"
-      ) {
-        return null;
+      if (!response.ok) {
+        continue;
       }
 
-      const type =
-        tags.tourism ||
-        tags.amenity ||
-        tags.leisure ||
-        "place";
+      const data = await response.json();
 
-      return {
-        id: element.id,
-        name:
-          tags.name ||
-          tags["name:en"] ||
-          "Unnamed place",
-        type,
-        latitude: latitudeValue,
-        longitude: longitudeValue
-      };
-    })
-    .filter(Boolean)
-    .filter(
-      (place) =>
-        place.name &&
-        place.name !== "Unnamed place"
-    )
-    .slice(0, 40);
+      if (!data.elements) {
+        continue;
+      }
+
+      const places = data.elements
+        .map((element) => {
+          const tags = element.tags || {};
+
+          const latitudeValue =
+            element.lat ?? element.center?.lat;
+
+          const longitudeValue =
+            element.lon ?? element.center?.lon;
+
+          if (
+            typeof latitudeValue !== "number" ||
+            typeof longitudeValue !== "number"
+          ) {
+            return null;
+          }
+
+          const type =
+            tags.tourism ||
+            tags.amenity ||
+            tags.leisure ||
+            "place";
+
+          return {
+            id: element.id,
+            name:
+              tags.name ||
+              tags["name:en"] ||
+              "Unnamed place",
+            type,
+            latitude: latitudeValue,
+            longitude: longitudeValue
+          };
+        })
+        .filter(Boolean)
+        .filter(
+          (place) =>
+            place.name &&
+            place.name !== "Unnamed place"
+        )
+        .slice(0, 40);
+
+      if (places.length) {
+        return places;
+      }
+
+    } catch (error) {
+      console.warn("Trying another places server...");
+    }
+  }
+
+  return [];
 }
 
 /* =========================================================
