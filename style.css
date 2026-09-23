@@ -1982,3 +1982,190 @@ footer {
     break-inside: avoid;
   }
 }
+/* =========================================================
+   FINAL HERO STRUCTURE FIX
+   ========================================================= */
+
+.hero {
+  position: relative;
+  min-height: 680px;
+  padding: 90px 0 80px;
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 60px;
+
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+
+  width: auto;
+  max-width: 650px;
+  margin: 0;
+  
+  display: block;
+}
+
+.hero-content .eyebrow {
+  display: inline-flex;
+}
+
+.hero-content h1 {
+  display: block;
+  margin-top: 22px;
+}
+
+.hero-content > p {
+  display: block;
+}
+
+.hero-actions {
+  display: flex;
+}
+
+.hero-trust {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  margin-top: 48px;
+}
+
+.hero-trust .trust-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hero-trust .trust-item strong {
+  color: var(--orange);
+  font-size: 12px;
+}
+
+.hero-trust .trust-item span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.hero-visual {
+  position: relative;
+  z-index: 4;
+
+  width: 100%;
+  min-height: 500px;
+
+  display: block;
+}
+
+.main-travel-card {
+  position: absolute;
+
+  width: 390px;
+  max-width: 90%;
+
+  right: 20px;
+  top: 45px;
+
+  transform: none;
+
+  z-index: 3;
+}
+
+.weather-floating {
+  position: absolute;
+  left: -10px;
+  top: 120px;
+  z-index: 6;
+}
+
+.plan-floating {
+  position: absolute;
+  right: -5px;
+  bottom: 45px;
+  z-index: 6;
+}
+
+/* =========================================================
+   HERO MOBILE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .hero-content > p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-trust {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    width: min(600px, 100%);
+    margin: 0 auto;
+  }
+
+  .main-travel-card {
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .weather-floating {
+    left: 0;
+  }
+
+  .plan-floating {
+    right: 0;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .hero {
+    padding-top: 65px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+  }
+
+  .hero-trust {
+    gap: 18px;
+  }
+
+  .hero-visual {
+    min-height: 420px;
+  }
+
+  .main-travel-card {
+    width: 340px;
+    max-width: 88%;
+  }
+
+  .weather-floating {
+    left: -5px;
+  }
+
+  .plan-floating {
+    right: -5px;
+  }
+}
